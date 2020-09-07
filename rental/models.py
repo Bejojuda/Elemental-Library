@@ -2,7 +2,8 @@ from django.db import models
 
 from books.models import BookUnit
 from person.models import Person
-from general.constants import Gender
+from general.constants import Gender, Type
+
 
 class Rental(models.Model):
     rental_date = models.DateField(auto_created=True)
@@ -11,4 +12,4 @@ class Rental(models.Model):
     book_unit = models.ForeignKey(BookUnit, on_delete=models.CASCADE)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
-    person_gender = models.CharField(max_length=2, choices=Gender.GENDER_CHOICES, default=Gender.MALE)
+    person_type = models.CharField(max_length=Type.TYPE_CHAR_LENGTH, choices=Type.TYPE_CHOICES, default=Type.STUDENT)

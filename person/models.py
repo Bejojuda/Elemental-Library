@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from .constants import Type  # ******* IMPORTAR EN init.py  *****************
-from general.constants import Gender
+from general.constants import Gender, Type
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 

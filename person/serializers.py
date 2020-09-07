@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
 
-from general.constants import Gender
-from .constants import Type
+from general.constants import Gender, Type
 from .models import Person
 
 
@@ -45,17 +44,6 @@ class PersonSerializer(serializers.ModelSerializer):
         if 'username' in validated_data:
 
             instance.username = validated_data.get('username', instance.username)
-
-        """
-        fields = instance._meta.fields
-        exclude = []
-        for field in fields:
-
-            field = field.name.split('.')[-1]  # to get coulmn name
-            if field in exclude:
-                continue
-            exec("instance.%s = validated_data.get(field, instance.%s)" % (field, field))
-        """
 
         instance.save()
         return instance

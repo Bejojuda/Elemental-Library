@@ -7,8 +7,15 @@ class Book(models.Model):
     name = models.CharField(max_length=45)
     description = models.TextField(max_length=150)
 
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ManyToManyField(Author, blank=True, related_name='authors')
+
+    def __str__(self):
+        return self.name
 
 
-class BookUnit(Book):
-    serial = models.IntegerField(unique=True)
+class BookUnit(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_units')
+    serial = models.CharField(max_length=16)
+
+    def __str__(self):
+        return self.book.name
