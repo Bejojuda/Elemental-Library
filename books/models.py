@@ -15,7 +15,9 @@ class Book(models.Model):
 
 class BookUnit(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_units')
-    serial = models.CharField(max_length=16)
+    serial = models.CharField(max_length=16, unique=True)
+
+    borrowed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.book.name
+        return self.book.name + " (Serial: " + self.serial + ")"

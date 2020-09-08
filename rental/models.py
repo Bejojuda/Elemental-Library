@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 from books.models import BookUnit
@@ -6,8 +8,8 @@ from general.constants import Gender, Type
 
 
 class Rental(models.Model):
-    rental_date = models.DateField(auto_created=True)
-    return_date = models.DateField()
+    rental_date = models.DateField(default=datetime.date.today)
+    return_date = models.DateField(blank=True, null=True)
 
     book_unit = models.ForeignKey(BookUnit, on_delete=models.CASCADE)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)

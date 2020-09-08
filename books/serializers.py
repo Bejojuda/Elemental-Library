@@ -4,6 +4,8 @@ from django.utils.crypto import get_random_string
 
 from .models import Book, BookUnit
 
+from author.serializers import AuthorViewSerializer
+
 
 class BookSerializer(serializers.ModelSerializer):
 
@@ -13,29 +15,32 @@ class BookSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class BookUnitSerializer(serializers.ModelSerializer):
 
     serial = serializers.CharField(read_only=True)
     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    borrowed = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = BookUnit
 
-        fields = ['serial', 'book']
+        fields = '__all__'
 
     def create(self, validated_data):
-        print(validated_data)
-        validated_data['serial'] = get_random_string(length=16)
+        if 'serial' not in validated_data:
+            validated_data['serial'] = get_random_string(length=16)
 
         book_unit = BookUnit.objects.create(**validated_data)
+
         return book_unit
 
 
+# Serializer used to show Book information, but also allow creation of BookUnit
 class BookAddUnitSerializer(serializers.ModelSerializer):
-    #name = serializers.CharField(read_only=True)
-    #description = serializers.CharField(read_only=True)
-    # author = serializers.CharField(source='book__author.name')
+    name = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    # name = serializers.CharField(required=False)
+    author = AuthorViewSerializer(many=True, required=False)
     book_units = BookUnitSerializer(many=True, read_only=True)
     serial = serializers.CharField(min_length=16, max_length=16, required=False)
 
@@ -44,7 +49,7 @@ class BookAddUnitSerializer(serializers.ModelSerializer):
 
         fields = '__all__'
 
-    # Modify fields propoerties depending on the HTTP Method
+    # Modify fields properties depending on the HTTP Method
     def get_fields(self, *args, **kwargs):
         fields = super(BookAddUnitSerializer, self).get_fields(*args, **kwargs)
         request = self.context.get('request', None)
@@ -52,7 +57,7 @@ class BookAddUnitSerializer(serializers.ModelSerializer):
         if request and getattr(request, 'method', None) == "POST":
             fields['name'].read_only = True
             fields['description'].read_only = True
-            # fields['author'].read_only = True
+            fields['author'].read_only = True
         if request and getattr(request, 'method', None) == "PUT":
             fields['serial'].read_only = True
         return fields

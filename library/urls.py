@@ -23,6 +23,12 @@ urlpatterns = [
 
     path('api/books/', include('books.urls')),
 
+    path('api/authors/', include('author.urls')),
+
+    path('api/rentals/', include('rental.urls')),
+
     path('login/', TokenObtainPairView.as_view()),
     path('api/token/refresh', TokenRefreshView.as_view()),
+
+    path('api-auth/', include('rest_framework.urls')),
 ]
