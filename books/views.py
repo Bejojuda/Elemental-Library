@@ -30,7 +30,14 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIVi
 class BookUnitDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookUnitSerializer
-    queryset = BookUnit.objects.all()
+
+    # Narrows down the BookUnits that belong to the specified Book
+    # And then gets the specific BookUnit by the pk
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        book_id = self.kwargs.get('book_id')
+        return BookUnit.objects.filter(pk=pk, book__pk=book_id)
+
 
 
 

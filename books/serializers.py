@@ -8,6 +8,7 @@ from author.serializers import AuthorViewSerializer
 
 
 class BookSerializer(serializers.ModelSerializer):
+    author = AuthorViewSerializer(many=True, required=False)
 
     class Meta:
         model = Book
@@ -17,8 +18,9 @@ class BookSerializer(serializers.ModelSerializer):
 
 class BookUnitSerializer(serializers.ModelSerializer):
 
-    serial = serializers.CharField(read_only=True)
-    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    serial = serializers.CharField(min_length=16, max_length=16)
+    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    book = BookSerializer(read_only=True)
     borrowed = serializers.BooleanField(read_only=True)
 
     class Meta:
@@ -30,16 +32,15 @@ class BookUnitSerializer(serializers.ModelSerializer):
         if 'serial' not in validated_data:
             validated_data['serial'] = get_random_string(length=16)
 
-        book_unit = BookUnit.objects.create(**validated_data)
+        # book_unit = BookUnit.objects.create(**validated_data)
 
-        return book_unit
+        return BookUnit.objects.create(**validated_data)
 
 
 # Serializer used to show Book information, but also allow creation of BookUnit
 class BookAddUnitSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
-    # name = serializers.CharField(required=False)
     author = AuthorViewSerializer(many=True, required=False)
     book_units = BookUnitSerializer(many=True, read_only=True)
     serial = serializers.CharField(min_length=16, max_length=16, required=False)
