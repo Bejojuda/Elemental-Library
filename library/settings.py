@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rental',
 ]
 
-# ************************ Se debe agregar para que se use a los directores para la validación ***********************
+# ************************ Se debe agregar para que se use a Person para la validación ***********************
 # AUTH_USER_MODEL = "person.Person"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 

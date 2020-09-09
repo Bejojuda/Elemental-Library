@@ -10,6 +10,7 @@ class Person(models.Model):
 
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,
+                                related_name='person'
                                 )
 
     birth_date = models.DateField(auto_now_add=True)
