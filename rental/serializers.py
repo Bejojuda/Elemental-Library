@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils.timezone import make_aware
 from rest_framework import serializers, status
 from rest_framework.response import Response
 
@@ -37,5 +40,24 @@ class RentalSerializer(serializers.ModelSerializer):
             return rental
         else:
             raise serializers.ValidationError("Book is currently borrowed")
+
+
+# Serializer to use when a BookUnit is returned
+class RentalReturnSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Rental
+
+        fields = []
+
+    # When a PUT is made to the endpoint, the serializer updates the return_date to the current Date
+    def update(self, instance, validated_data):
+
+        # make_aware needed because native value datetime.now is not accepted by the model
+        if instance.return_date is None:
+            instance.return_date = make_aware(datetime.datetime.now())
+            instance.save()
+
+        return instance
 
 
