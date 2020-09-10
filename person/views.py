@@ -8,10 +8,12 @@ from django.contrib.auth.models import User
 from .serializers import PersonSerializer
 from .permissions import IsSelfOrReadOnly
 from general.filters import person_view_filters
+from general.pagination import StandardResultsSetPagination
 
 
 class PersonView(generics.ListCreateAPIView):
     serializer_class = PersonSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = person_view_filters(self.request.query_params, User)

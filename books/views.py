@@ -5,11 +5,13 @@ from .models import Book, BookUnit
 from .serializers import BookSerializer, BookUnitSerializer, BookAddUnitSerializer
 from .filters import books_view_filters
 from general.permissions import IsAdminOrReadOnly
+from general.pagination import StandardResultsSetPagination, LargeResultsSetPagination
 
 
 class BookView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = books_view_filters(self.request.query_params)
@@ -36,6 +38,7 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIVi
 class BookUnitView(generics.ListAPIView):
     serializer_class = BookUnitSerializer
     queryset = BookUnit.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = BookUnit.objects.all()
