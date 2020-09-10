@@ -1,19 +1,22 @@
+import datetime
+
 from rest_framework import generics
 from rest_framework import permissions
 
 from django.contrib.auth.models import User
 
-from .models import Person
 from .serializers import PersonSerializer
 from .permissions import IsSelfOrReadOnly
+from general.filters import person_view_filters
 
 
 class PersonView(generics.ListCreateAPIView):
     serializer_class = PersonSerializer
-    queryset = User.objects.all()
 
-    # def perform_create(self, serializer):
-    #    return Person.objects.create_user(**serializer.validated_data)
+    def get_queryset(self):
+        queryset = person_view_filters(self.request.query_params, User)
+
+        return queryset
 
 
 class PersonDetailsView(generics.RetrieveUpdateDestroyAPIView):

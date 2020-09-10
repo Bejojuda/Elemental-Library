@@ -5,7 +5,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 
 from .models import Rental
-from books.models import BookUnit
+from books.serializers import BookUnitSerializer
 from person.serializers import PersonSerializer
 from person.models import Person
 
@@ -15,17 +15,18 @@ class RentalSerializer(serializers.ModelSerializer):
     return_date = serializers.DateTimeField(read_only=True)
     rental_date = serializers.DateTimeField(read_only=True)
     person_type = serializers.CharField(read_only=True)
+    # book_unit = BookUnitSerializer(read_only=True)
 
     person = serializers.CharField(read_only=True)
 
     class Meta:
-
         model = Rental
 
         fields = '__all__'
 
     # Overwriting the create method to check if a BookUnit is borrowed and to add Person info
     def create(self, validated_data):
+        print(validated_data)
         # The current person is obtained from the request
         user = self.context.get('request', None).user
         person = Person.objects.get(user__username=user.username)

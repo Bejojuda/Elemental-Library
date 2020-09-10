@@ -1,14 +1,20 @@
 from rest_framework import generics
+from distutils.util import strtobool
 
 from .models import Book, BookUnit
 from .serializers import BookSerializer, BookUnitSerializer, BookAddUnitSerializer
+from .filters import books_view_filters
 from general.permissions import IsAdminOrReadOnly
 
 
 class BookView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookSerializer
-    queryset = Book.objects.all()
+
+    def get_queryset(self):
+        queryset = books_view_filters(self.request.query_params)
+
+        return queryset
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView):
@@ -25,6 +31,28 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIVi
         validated_data['book'] = self.queryset.get(pk=self.kwargs['pk'])
         book_unit = BookUnitSerializer.create(BookUnitSerializer, validated_data)
         return book_unit
+
+
+class BookUnitView(generics.ListAPIView):
+    serializer_class = BookUnitSerializer
+    queryset = BookUnit.objects.all()
+
+    def get_queryset(self):
+        queryset = BookUnit.objects.all()
+        serial = self.request.query_params.get('serial', None)
+        borrowed = self.request.query_params.get('borrowed', None)
+
+        if serial:
+            queryset = BookUnit.objects.filter(serial__iexact=serial)
+        if borrowed:
+            try:
+                borrowed = strtobool(borrowed)
+
+                queryset = BookUnit.objects.filter(borrowed=borrowed)
+            except ValueError:
+                print("Error")
+
+        return queryset
 
 
 class BookUnitDetailView(generics.RetrieveUpdateDestroyAPIView):

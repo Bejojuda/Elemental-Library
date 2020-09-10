@@ -8,7 +8,7 @@ from author.serializers import AuthorViewSerializer
 
 
 class BookSerializer(serializers.ModelSerializer):
-    author = AuthorViewSerializer(many=True, required=False)
+    #author = AuthorViewSerializer(many=True, required=False)
 
     class Meta:
         model = Book
