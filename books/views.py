@@ -3,7 +3,7 @@ from distutils.util import strtobool
 
 from .models import Book, BookUnit
 from .serializers import BookSerializer, BookUnitSerializer, BookAddUnitSerializer
-from .filters import books_view_filters
+from .filters import books_view_filters, book_unit_view_filters
 from general.permissions import IsAdminOrReadOnly
 from general.pagination import StandardResultsSetPagination, LargeResultsSetPagination
 
@@ -41,19 +41,7 @@ class BookUnitView(generics.ListAPIView):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        queryset = BookUnit.objects.all()
-        serial = self.request.query_params.get('serial', None)
-        borrowed = self.request.query_params.get('borrowed', None)
-
-        if serial:
-            queryset = BookUnit.objects.filter(serial__iexact=serial)
-        if borrowed:
-            try:
-                borrowed = strtobool(borrowed)
-
-                queryset = BookUnit.objects.filter(borrowed=borrowed)
-            except ValueError:
-                print("Error")
+        queryset = book_unit_view_filters(self.request.query_params)
 
         return queryset
 
