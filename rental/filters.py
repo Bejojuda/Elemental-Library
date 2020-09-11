@@ -65,3 +65,19 @@ def rentals_view_filters(params):
         pass
 
     return queryset
+
+
+def rentals_view_ordering(params, queryset):
+    ordering = params.get('ordering', None)
+
+    if ordering:
+        if ordering == 'rental_date':
+            queryset = queryset.order_by('rental_date')
+        elif ordering == '-rental_date':
+            queryset = queryset.order_by('-rental_date')
+        elif ordering == 'return_date':
+            queryset = queryset.order_by('return_date')
+        elif ordering == '-return_date':
+            queryset = queryset.order_by('-return_date')
+
+    return queryset

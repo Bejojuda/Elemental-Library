@@ -1,9 +1,8 @@
 from rest_framework import generics
-from distutils.util import strtobool
 
 from .models import Book, BookUnit
 from .serializers import BookSerializer, BookUnitSerializer, BookAddUnitSerializer
-from .filters import books_view_filters, book_unit_view_filters
+from .filters import books_view_filters, book_units_view_filters, books_view_ordering, book_units_view_ordering
 from general.permissions import IsAdminOrReadOnly
 from general.pagination import StandardResultsSetPagination, LargeResultsSetPagination
 
@@ -15,6 +14,8 @@ class BookView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = books_view_filters(self.request.query_params)
+
+        queryset = books_view_ordering(self.request.query_params, queryset)
 
         return queryset
 
@@ -41,7 +42,9 @@ class BookUnitView(generics.ListAPIView):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        queryset = book_unit_view_filters(self.request.query_params)
+        queryset = book_units_view_filters(self.request.query_params)
+
+        queryset = book_units_view_ordering(self.request.query_params, queryset)
 
         return queryset
 

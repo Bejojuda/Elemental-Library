@@ -2,7 +2,7 @@ from rest_framework import generics
 
 from .serializers import RentalSerializer, RentalReturnSerializer
 from .models import Rental
-from .filters import rentals_view_filters
+from .filters import rentals_view_filters, rentals_view_ordering
 
 from general.pagination import LargeResultsSetPagination
 
@@ -13,6 +13,7 @@ class RentalView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = rentals_view_filters(self.request.query_params)
+        queryset = rentals_view_ordering(self.request.query_params, queryset)
 
         return queryset
 

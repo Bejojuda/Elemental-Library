@@ -3,8 +3,8 @@ import datetime
 from rest_framework import generics
 
 from general.permissions import IsAdminOrReadOnly
-from general.filters import person_view_filters
 from general.pagination import SmallResultsSetPagination
+from .filters import authors_view_filters, authors_view_ordering
 from .models import Author
 from .serializers import AuthorSerializer
 
@@ -15,7 +15,8 @@ class AuthorView(generics.ListCreateAPIView):
     pagination_class = SmallResultsSetPagination
 
     def get_queryset(self):
-        queryset = person_view_filters(self.request.query_params, Author)
+        queryset = authors_view_filters(self.request.query_params)
+        queryset = authors_view_ordering(self.request.query_params, queryset)
 
         return queryset
 

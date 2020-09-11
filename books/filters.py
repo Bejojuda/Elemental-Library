@@ -1,5 +1,7 @@
 from distutils.util import strtobool
 
+from django.db.models.functions import Lower
+
 from books.models import Book, BookUnit
 
 
@@ -17,7 +19,22 @@ def books_view_filters(params):
     return queryset
 
 
-def book_unit_view_filters(params):
+def books_view_ordering(params, queryset):
+    ordering = params.get('ordering', None)
+    if ordering:
+        if ordering == 'name':
+            queryset = queryset.order_by(Lower('name'))
+        elif ordering == '-name':
+            queryset = queryset.order_by(Lower('name').desc())
+        elif ordering == 'description':
+            queryset = queryset.order_by(Lower('description'))
+        elif ordering == '-description':
+            queryset = queryset.order_by(Lower('description').desc())
+
+    return queryset
+
+
+def book_units_view_filters(params):
     queryset = BookUnit.objects.all()
     serial = params.get('serial', None)
     borrowed = params.get('borrowed', None)
@@ -31,5 +48,20 @@ def book_unit_view_filters(params):
             queryset = BookUnit.objects.filter(borrowed=borrowed)
         except ValueError:
             print("Error")
+
+    return queryset
+
+
+def book_units_view_ordering(params, queryset):
+    ordering = params.get('ordering', None)
+    if ordering:
+        if ordering == 'name':
+            queryset = queryset.order_by(Lower('book__name'))
+        elif ordering == '-name':
+            queryset = queryset.order_by(Lower('book__name').desc())
+        elif ordering == 'description':
+            queryset = queryset.order_by(Lower('book__description'))
+        elif ordering == '-description':
+            queryset = queryset.order_by(Lower('book__description').desc())
 
     return queryset
