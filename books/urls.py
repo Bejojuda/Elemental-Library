@@ -7,7 +7,7 @@ urlpatterns = [
     path('', BookView.as_view()),
     path('units/', BookUnitView.as_view()),
     path('<int:pk>/', BookDetailView.as_view()),
-    path('<int:book_id>/<int:pk>', BookUnitDetailView.as_view()),
+    path('<int:book_id>/<int:pk>/', BookUnitDetailView.as_view()),
 
     # If placed above 'units/', that endpoint would not work
     url('^(?P<parmas>.+)/$', BookView.as_view()),

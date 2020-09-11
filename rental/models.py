@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from books.models import BookUnit
@@ -23,5 +23,13 @@ def make_book_borrowed(sender, **kwargs):
     if kwargs.get('created', False):
         book_unit_id = kwargs['instance'].book_unit_id
         book_unit = BookUnit.objects.get(pk=book_unit_id)
-        # book_unit.borrowed = True
+        book_unit.borrowed = True
         book_unit.save(rental=True)
+
+
+@receiver(post_delete, sender=Rental)
+def rental_deleted(sender, instance, **kwargs):
+    book_unit = BookUnit.objects.get(pk=instance.book_unit.id)
+    book_unit.borrowed = False
+    book_unit.save(rental=True)
+
