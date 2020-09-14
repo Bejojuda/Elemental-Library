@@ -1,10 +1,9 @@
-import datetime
-
 from rest_framework import generics
+from django_filters import rest_framework as filters
 
 from general.permissions import IsAdminOrReadOnly
 from general.pagination import SmallResultsSetPagination
-from .filters import authors_view_filters, authors_view_ordering
+from .filters import authors_view_ordering, AuthorFilter
 from .models import Author
 from .serializers import AuthorSerializer
 
@@ -13,9 +12,11 @@ class AuthorView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = AuthorSerializer
     pagination_class = SmallResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = AuthorFilter
 
     def get_queryset(self):
-        queryset = authors_view_filters(self.request.query_params)
+        queryset = Author.objects.all()
         queryset = authors_view_ordering(self.request.query_params, queryset)
 
         return queryset

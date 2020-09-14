@@ -24,7 +24,7 @@ def make_book_borrowed(sender, **kwargs):
         book_unit_id = kwargs['instance'].book_unit_id
         book_unit = BookUnit.objects.get(pk=book_unit_id)
         book_unit.borrowed = True
-        book_unit.save(rental=True)
+        book_unit.save()
 
 
 @receiver(post_delete, sender=Rental)

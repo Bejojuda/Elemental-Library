@@ -26,19 +26,13 @@ class BookUnit(models.Model):
     # Makes sure that the serial from the BookUnit does not exists
     # If it does, a ValidationError will be raised
     def save(self, *args, **kwargs):
-        # Checks if the save comes from the Rental serializer or not
-        # This way the ValidationError does not raise when creating a Rental
-        if 'rental' not in kwargs:
-            self.clean()
-        # If there is an argument rental, it means it comes from rental creation,
-        # so we should pop the rental from kwargs
-        else:
-            kwargs.pop('rental')
+        self.clean()
         super(BookUnit, self).save(*args, **kwargs)
 
     def clean(self):
         serial = self.serial
-        exists = BookUnit.objects.filter(serial=serial).exists()
+        print(self.pk)
+        exists = BookUnit.objects.filter(serial=serial).exclude(pk=self.pk).exists()
 
         if exists:
             raise ValidationError("The serial number already exits")

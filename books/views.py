@@ -1,8 +1,9 @@
 from rest_framework import generics
+from django_filters import rest_framework as filters
 
+from .filters import BookFilter, books_view_ordering, book_units_view_ordering, BookUnitFilter
 from .models import Book, BookUnit
 from .serializers import BookSerializer, BookUnitSerializer, BookAddUnitSerializer
-from .filters import books_view_filters, book_units_view_filters, books_view_ordering, book_units_view_ordering
 from general.permissions import IsAdminOrReadOnly
 from general.pagination import StandardResultsSetPagination, LargeResultsSetPagination
 
@@ -11,9 +12,11 @@ class BookView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookSerializer
     pagination_class = StandardResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = BookFilter
 
     def get_queryset(self):
-        queryset = books_view_filters(self.request.query_params)
+        queryset = Book.objects.all()
 
         queryset = books_view_ordering(self.request.query_params, queryset)
 
@@ -38,12 +41,12 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIVi
 
 class BookUnitView(generics.ListAPIView):
     serializer_class = BookUnitSerializer
-    queryset = BookUnit.objects.all()
     pagination_class = LargeResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = BookUnitFilter
 
     def get_queryset(self):
-        queryset = book_units_view_filters(self.request.query_params)
-
+        queryset = BookUnit.objects.all()
         queryset = book_units_view_ordering(self.request.query_params, queryset)
 
         return queryset
@@ -59,8 +62,3 @@ class BookUnitDetailView(generics.RetrieveUpdateDestroyAPIView):
         pk = self.kwargs.get('pk')
         book_id = self.kwargs.get('book_id')
         return BookUnit.objects.filter(pk=pk, book__pk=book_id)
-
-
-
-
-

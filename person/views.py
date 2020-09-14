@@ -1,12 +1,9 @@
-import datetime
-
-from django.db.models.functions import Lower
 from rest_framework import generics
-from rest_framework import permissions
+from django_filters import rest_framework as filters
 
 from django.contrib.auth.models import User
 
-from .filters import person_view_filters, person_view_ordering
+from .filters import person_view_ordering, PersonFilter
 from .serializers import PersonSerializer
 from .permissions import IsSelfOrReadOnly
 from general.pagination import StandardResultsSetPagination
@@ -15,9 +12,11 @@ from general.pagination import StandardResultsSetPagination
 class PersonView(generics.ListCreateAPIView):
     serializer_class = PersonSerializer
     pagination_class = StandardResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PersonFilter
 
     def get_queryset(self):
-        queryset = person_view_filters(self.request.query_params)
+        queryset = User.objects.all()
         queryset = person_view_ordering(self.request.query_params, queryset)
 
         return queryset

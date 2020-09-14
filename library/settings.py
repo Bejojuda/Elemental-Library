@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'author',
     'general',
     'rental',
+    'django_filters',
 ]
 
 # ************************ Se debe agregar para que se use a Person para la validación ***********************

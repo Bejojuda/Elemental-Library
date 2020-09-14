@@ -26,7 +26,6 @@ class RentalSerializer(serializers.ModelSerializer):
 
     # Overwriting the create method to check if a BookUnit is borrowed and to add Person info
     def create(self, validated_data):
-        print(validated_data)
         # The current person is obtained from the request
         user = self.context.get('request', None).user
         person = Person.objects.get(user__username=user.username)

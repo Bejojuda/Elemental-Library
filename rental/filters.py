@@ -1,8 +1,23 @@
 import datetime
+from django_filters import rest_framework as filters
 
 from django.utils.timezone import make_aware
 
 from .models import Rental
+
+
+class RentalFilter(filters.FilterSet):
+    book_name = filters.CharFilter(field_name="book_unit__book__name", lookup_expr='icontains')
+    rental_date_gte = filters.DateTimeFilter(field_name="rental_date", lookup_expr='gte')
+    rental_date_lte = filters.DateTimeFilter(field_name="rental_date", lookup_expr='lte')
+
+    return_date_gte = filters.DateTimeFilter(field_name="return_date", lookup_expr='gte')
+    return_date_lte = filters.DateTimeFilter(field_name="return_date", lookup_expr='lte')
+
+    class Meta:
+        model = Rental
+        fields = ['book_name', 'book_unit__serial', 'rental_date', 'rental_date_gte', 'rental_date_lte',
+                  'return_date', 'return_date_gte', 'return_date_lte']
 
 
 def rentals_view_filters(params):
@@ -10,6 +25,7 @@ def rentals_view_filters(params):
 
     book_name = params.get('book', None)
     serial = params.get('serial', None)
+
     rental_date = params.get('rental_date', None)
     rental_date_gte = params.get('rental_date_gte', None)
     rental_date_lte = params.get('rental_date_lte', None)

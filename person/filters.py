@@ -1,40 +1,18 @@
 import datetime
+from django_filters import rest_framework as filters
 
 from django.contrib.auth.models import User
 from django.db.models.functions import Lower
 
 
-def person_view_filters(params):
-    queryset = User.objects.all()
+class PersonFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name="username", lookup_expr='icontains')
+    birth_date_gte = filters.DateFilter(field_name="person__birth_date", lookup_expr='gte')
+    birth_date_lte = filters.DateFilter(field_name="person__birth_date", lookup_expr='lte')
 
-    name = params.get('name', None)
-    gender = params.get('gender', None)
-    birth_date = params.get('birth_date', None)
-    birth_date_gte = params.get('birth_date_gte', None)
-    birth_date_lte = params.get('birth_date_lte', None)
-
-    if name:
-        queryset = User.objects.filter(username__contains=name)
-
-    if gender:
-        queryset = User.objects.filter(person__gender__iexact=gender)
-
-    try:
-        if birth_date:
-            date_time = datetime.datetime.strptime(birth_date, '%Y-%m-%d')
-            queryset = User.objects.filter(person__birth_date=date_time)
-
-        if birth_date_gte:
-            date_time = datetime.datetime.strptime(birth_date_gte, '%Y-%m-%d')
-            queryset = User.objects.filter(person__birth_date__gte=date_time)
-
-        if birth_date_lte:
-            date_time = datetime.datetime.strptime(birth_date_lte, '%Y-%m-%d')
-            queryset = User.objects.filter(person__birth_date__lte=date_time)
-    except ValueError:
-        pass
-
-    return queryset
+    class Meta:
+        model = User
+        fields = ['username', 'person__gender', 'person__birth_date', 'birth_date_gte', 'birth_date_lte']
 
 
 def person_view_ordering(params, queryset):

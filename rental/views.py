@@ -1,8 +1,9 @@
 from rest_framework import generics
+from django_filters import rest_framework as filters
 
 from .serializers import RentalSerializer, RentalReturnSerializer
 from .models import Rental
-from .filters import rentals_view_filters, rentals_view_ordering
+from .filters import rentals_view_filters, rentals_view_ordering, RentalFilter
 
 from general.pagination import LargeResultsSetPagination
 
@@ -10,9 +11,11 @@ from general.pagination import LargeResultsSetPagination
 class RentalView(generics.ListAPIView):
     serializer_class = RentalSerializer
     pagination_class = LargeResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = RentalFilter
 
     def get_queryset(self):
-        queryset = rentals_view_filters(self.request.query_params)
+        queryset = Rental.objects.all()
         queryset = rentals_view_ordering(self.request.query_params, queryset)
 
         return queryset
