@@ -28,7 +28,7 @@ class RentalSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # The current person is obtained from the request
         user = self.context.get('request', None).user
-        person = Person.objects.get(user__username=user.username)
+        person = Person.objects.get(pk=user.pk)
 
         # The current person and person type are assigned to the Rental attributes
         validated_data['person'] = person

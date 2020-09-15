@@ -9,6 +9,9 @@ from .serializers import AuthorSerializer
 
 
 class AuthorView(generics.ListCreateAPIView):
+    """
+    Lists and creates a new Author
+    """
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = AuthorSerializer
     pagination_class = SmallResultsSetPagination
@@ -23,6 +26,9 @@ class AuthorView(generics.ListCreateAPIView):
 
 
 class AuthorDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Get, Update and Delete a specific Rental
+    """
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()

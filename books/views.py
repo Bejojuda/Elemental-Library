@@ -9,6 +9,9 @@ from general.pagination import StandardResultsSetPagination, LargeResultsSetPagi
 
 
 class BookView(generics.ListCreateAPIView):
+    """
+    List and Create Books
+    """
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookSerializer
     pagination_class = StandardResultsSetPagination
@@ -24,6 +27,10 @@ class BookView(generics.ListCreateAPIView):
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView):
+    """
+    GET, PUT, PATCH and DELETE a Book
+    POST a BookUnit with an input serial number or an internally generated one
+    """
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookAddUnitSerializer
     queryset = Book.objects.all()
@@ -40,6 +47,10 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIVi
 
 
 class BookUnitView(generics.ListAPIView):
+    """
+    Lists all of the BookUnits
+    """
+
     serializer_class = BookUnitSerializer
     pagination_class = LargeResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
@@ -53,6 +64,9 @@ class BookUnitView(generics.ListAPIView):
 
 
 class BookUnitDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Returns a BookUnit (id) that belongs to a Book (book_id)
+    """
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BookUnitSerializer
 

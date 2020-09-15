@@ -31,7 +31,6 @@ class BookUnit(models.Model):
 
     def clean(self):
         serial = self.serial
-        print(self.pk)
         exists = BookUnit.objects.filter(serial=serial).exclude(pk=self.pk).exists()
 
         if exists:

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'general',
     'rental',
     'django_filters',
+    'drf_yasg',
 ]
 
 # ************************ Se debe agregar para que se use a Person para la validación ***********************
@@ -136,6 +137,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 
 }
 

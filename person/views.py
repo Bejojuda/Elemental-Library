@@ -10,6 +10,9 @@ from general.pagination import StandardResultsSetPagination
 
 
 class PersonView(generics.ListCreateAPIView):
+    """
+    List and Create all of the created People
+    """
     serializer_class = PersonSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
@@ -23,6 +26,9 @@ class PersonView(generics.ListCreateAPIView):
 
 
 class PersonDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Get, Update and Delete a specific Person
+    """
     permission_classes = [IsSelfOrReadOnly]
     serializer_class = PersonSerializer
     queryset = User.objects.all()
