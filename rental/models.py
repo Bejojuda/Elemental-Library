@@ -31,5 +31,5 @@ def make_book_borrowed(sender, **kwargs):
 def rental_deleted(sender, instance, **kwargs):
     book_unit = BookUnit.objects.get(pk=instance.book_unit.id)
     book_unit.borrowed = False
-    book_unit.save(rental=True)
+    book_unit.save()
 

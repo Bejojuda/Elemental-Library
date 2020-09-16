@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from .filters import person_view_ordering, PersonFilter
 from .serializers import PersonSerializer
 from .permissions import IsSelfOrReadOnly
-from general.pagination import StandardResultsSetPagination, LargeResultsSetPagination
+from general.pagination import StandardResultsSetPagination
 
 
 class PersonView(generics.ListCreateAPIView):
@@ -14,7 +14,7 @@ class PersonView(generics.ListCreateAPIView):
     List and Create all of the created People
     """
     serializer_class = PersonSerializer
-    pagination_class = LargeResultsSetPagination
+    pagination_class = StandardResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = PersonFilter
 
