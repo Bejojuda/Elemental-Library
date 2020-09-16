@@ -20,11 +20,17 @@ class Command(BaseCommand):
     help = 'our help string comes here'
 
     def handle(self, *args, **options):
-        self.populate_people(random.randint(1, 10))
-        self.populate_authors(random.randint(1, 10))
-        self.populate_books(random.randint(1, 15))
-        self.populate_book_units(random.randint(1, 50))
-        self.populate_rentals(random.randint(1, 30))
+        people_amount = random.randint(5, 10)
+        authors_amount = random.randint(5, 10)
+        books_amount = random.randint(5, 15)
+        book_units_amount = random.randint(15, 50)
+        rentals_amount = book_units_amount - random.randint(10, 14)
+
+        self.populate_people(people_amount)
+        self.populate_authors(authors_amount)
+        self.populate_books(books_amount)
+        self.populate_book_units(book_units_amount)
+        self.populate_rentals(rentals_amount)
 
     def populate_rentals(self, amount):
         fake = Faker()
