@@ -12,6 +12,7 @@ class PersonSerializer(serializers.ModelSerializer):
     birth_date = serializers.DateField(source='person.birth_date')
     gender = serializers.ChoiceField(source='person.gender', choices=Gender.GENDER_CHOICES, default=Gender.MALE)
     type = serializers.ChoiceField(source='person.type', choices=Type.TYPE_CHOICES, default=Type.VISITOR)
+    picture = serializers.FileField(source='person.picture', required=False)
 
     password = serializers.CharField(
         write_only=True,
@@ -20,7 +21,7 @@ class PersonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'birth_date', 'gender', 'type']
+        fields = ['id', 'username', 'password', 'picture', 'birth_date', 'gender', 'type']
 
     def create(self, validated_data):
         person_data = validated_data.pop('person')

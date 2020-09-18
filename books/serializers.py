@@ -19,7 +19,6 @@ class BookSerializer(serializers.ModelSerializer):
 class BookUnitSerializer(serializers.ModelSerializer):
 
     serial = serializers.CharField(min_length=16, max_length=16)
-    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
     book = BookSerializer(read_only=True)
     borrowed = serializers.BooleanField(read_only=True)
 
@@ -31,8 +30,6 @@ class BookUnitSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if 'serial' not in validated_data:
             validated_data['serial'] = get_random_string(length=16)
-
-        # book_unit = BookUnit.objects.create(**validated_data)
 
         return BookUnit.objects.create(**validated_data)
 

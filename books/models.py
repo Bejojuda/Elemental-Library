@@ -6,7 +6,8 @@ from author.models import Author
 
 class Book(models.Model):
     name = models.CharField(max_length=45)
-    description = models.TextField(max_length=150)
+    description = models.TextField(max_length=250)
+    cover = models.FileField(null=True, blank=True)
 
     author = models.ManyToManyField(Author, blank=True, related_name='authors')
 
