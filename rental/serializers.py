@@ -52,11 +52,10 @@ class RentalReturnSerializer(serializers.ModelSerializer):
 
     # When a PUT is made to the endpoint, the serializer updates the return_date to the current Date
     def update(self, instance, validated_data):
-
         # make_aware needed because native value datetime.now is not accepted by the model
         if instance.return_date is None:
             instance.return_date = make_aware(datetime.datetime.now())
-            instance.save()
+        instance.save()
 
         return instance
 

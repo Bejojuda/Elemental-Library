@@ -20,10 +20,13 @@ class Rental(models.Model):
 # Signal used to change the Book Unit borrowed attribute to True when a Rental is created
 @receiver(post_save, sender=Rental)
 def make_book_borrowed(sender, **kwargs):
+    book_unit_id = kwargs['instance'].book_unit_id
+    book_unit = BookUnit.objects.get(pk=book_unit_id)
     if kwargs.get('created', False):
-        book_unit_id = kwargs['instance'].book_unit_id
-        book_unit = BookUnit.objects.get(pk=book_unit_id)
         book_unit.borrowed = True
+        book_unit.save()
+    else:
+        book_unit.borrowed = False
         book_unit.save()
 
 
