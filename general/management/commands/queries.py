@@ -95,7 +95,7 @@ class Command(BaseCommand):
         """
         Prints the people that have more than 3 rentals
         """
-        people = Person.objects.annotate(Count('rental')).filter(rental__count__gte=3)
+        people = Person.objects.annotate(total=Count('rental')).filter(total=3)
 
         if people:
             print("People that have made more than 3 rentals: ")
@@ -110,7 +110,7 @@ class Command(BaseCommand):
         """
         people_with_no_rentals = Person.objects.filter(rental=None)
 
-        person_with_most_rentals = Person.objects.annotate(Count('rental')).order_by('-rental__count')[0]
+        person_with_most_rentals = Person.objects.annotate(Count('rental')).order_by('-rental__count').first()
 
         print("People with no rentals: \n")
         for person in people_with_no_rentals:

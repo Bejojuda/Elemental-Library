@@ -1,6 +1,7 @@
 import datetime
 
 from django.utils.timezone import make_aware
+from pytz import timezone
 from rest_framework import serializers, status
 from rest_framework.response import Response
 
@@ -12,9 +13,10 @@ from person.models import Person
 
 class RentalSerializer(serializers.ModelSerializer):
 
-    return_date = serializers.DateTimeField(read_only=True)
+    return_date = serializers.DateTimeField(read_only=True, default_timezone=timezone('UTC'))
     rental_date = serializers.DateTimeField(read_only=True)
     person_type = serializers.CharField(read_only=True)
+
     # book_unit = BookUnitSerializer(read_only=True)
 
     person = serializers.CharField(read_only=True)

@@ -14,6 +14,8 @@ from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from library.celery import app
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 
@@ -28,8 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -47,6 +49,11 @@ INSTALLED_APPS = [
     'rental',
     'django_filters',
     'drf_yasg',
+
+    # Needed to create the tables in the Django Admin for the tasks
+    # Use command: celery -A proj beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    # And in another terminal: celery -A tasks worker --pool=solo -l info
+    'django_celery_beat',
 ]
 
 # ************************ Se debe agregar para que se use a Person para la validación ***********************
@@ -144,10 +151,18 @@ REST_FRAMEWORK = {
 
 # Added to customize the Simple JWT Token life span
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 # Used to save and access project Images when in development
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+# Configuration to use redis as a Broker for the celery process
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
